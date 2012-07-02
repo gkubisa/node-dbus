@@ -69,7 +69,7 @@ if you have source and [NPM][], then from the main folder
 
 otherwise from the main folder of source
 
-    node-waf configure build install
+    node-waf configure build
 
 DBusMessage:
 ===============
@@ -165,6 +165,19 @@ An `error` event will be triggered on the message object if the method-call time
 
 Defaults to -1 which indicates a sane default timeout to be used.
 
+**variantPolicy**: &lt;Integer&gt;
+
+Dictates the policy to be used when a variant type code supplied to `appendArgs()` method
+is expected to contain data which is a container-type (only) such as an array or dict_entry.
+
+Defaults to `NDBUS_VARIANT_POLICY_DEFAULT` which suggests that the variant's data-signature
+will be `a{sv}` for a dict_entry or `av` for array.
+
+If specified as `NDBUS_VARIANT_POLICY_SIMPLE`, the variant's data-signature will contain
+the *basic* data-type of the *first* property's value of the JS object to be appended. For
+example, if object to be appended is `{a:int b:int}`, the data-signature shall be `a{si}`
+and so on for string's, bool's, array's and object's.
+
 Methods:
 --------------
 
@@ -209,7 +222,7 @@ As of now, only the following list of primitive data types from the [D-Bus spec]
 are supported for `appendArgs()` :
 
 boolean, int32, uint32, int64, double, signature, object\_path, string,
-array, dict\_entry (dictionary), and variant (of type int32, string or boolean)
+array, dict\_entry (dictionary), and variant.
 
 **clearArgs()**:
 
@@ -409,6 +422,13 @@ For property `type` of the message object,
   - Currently un-used. Dont use it.
 - `dbus.DBUS_MESSAGE_TYPE_SIGNAL` = 4
   - Indicates that a signal is intended to be sent or listened.
+
+For property `variantPolicy` of the message object,
+
+- `dbus.NDBUS_VARIANT_POLICY_DEFAULT` = 0
+  - Refer to `variantPolicy` property description.
+- `dbus.NDBUS_VARIANT_POLICY_SIMPLE` = 1
+  - Refer to `variantPolicy` property description.
 
 Additionally,
 

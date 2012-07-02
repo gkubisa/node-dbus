@@ -383,9 +383,6 @@ NDbusMessageAppendArgsReal (DBusMessageIter * iter,
 
           Local<Object> obj = Local<Object>::Cast(value);
           Local<Array> obj_properties = obj->GetOwnPropertyNames();
-          //dont add 'empty' objects; tell me a usecase for it
-          if (!obj_properties->Length())
-            break;
 
           DBusSignatureIter dictsigniter, dictsignsubiter;
           dbus_signature_iter_recurse(&signiter, &dictsigniter);
@@ -448,9 +445,6 @@ NDbusMessageAppendArgsReal (DBusMessageIter * iter,
             return TYPE_MISMATCH;
 
           Local<Array> arr = Local<Array>::Cast(value);
-          //dont add 'empty' arrays; tell me a usecase for it
-          if (!arr->Length())
-            break;
 
           DBusSignatureIter arraysigniter;
           dbus_signature_iter_recurse(&signiter, &arraysigniter);
@@ -741,11 +735,11 @@ NDbusMessageFilter (DBusConnection *cnxn,
 
       if (NDbusIsValidV8Array(object_list)) {
         Local<Object> signal = Object::New();
-        signal->Set(String::New("iface"), String::New(interface));
-        signal->Set(String::New("member"), String::New(member));
-        signal->Set(String::New("path"), object_path ? String::New(object_path) : Null());
-        signal->Set(String::New("sender"), sender ? String::New(sender) : Null());
-        signal->Set(String::New("destination"), destination ? String::New(destination) : Null());
+        signal->Set(String::New(NDBUS_PROPERTY_INTERFACE), String::New(interface));
+        signal->Set(String::New(NDBUS_PROPERTY_MEMBER), String::New(member));
+        signal->Set(String::New(NDBUS_PROPERTY_PATH), object_path ? String::New(object_path) : Null());
+        signal->Set(String::New(NDBUS_PROPERTY_SENDER), sender ? String::New(sender) : Null());
+        signal->Set(String::New(NDBUS_PROPERTY_DEST), destination ? String::New(destination) : Null());
         Local<Value> args = NDbusRetrieveMessageArgs(message);
         const gint argc = 3;
         Local<Value> argv[argc];
